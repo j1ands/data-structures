@@ -21,6 +21,8 @@ var traverseDomAndCollectElements = function(matchFunc, startEl)
     Object.keys(children).forEach(function(el)
     {
       if(!isNaN(parseInt(el)))
+        //[].slice.call(starEl.children,0);
+        //Array.prototype.call(startEl.children,0);
       {
         //We only care about the numbered children keys, there were extra matches that weren't children
         childCollection.push(children[el]);
@@ -68,7 +70,7 @@ var matchFunctionMaker = function(selector)
     return function(DomElement)
     {
       var selectorName = selector.slice(1);
-      return DomElement.id === selectorName ? true:false;
+      return DomElement.id === selectorName;
     }
   } 
   
@@ -78,18 +80,28 @@ var matchFunctionMaker = function(selector)
     return function(DomElement)
     {
       var selectorName = selector.slice(1);
-      var classNames = DomElement.className.split(' ');
-      var trueOrFalse =false;
-
-      classNames.forEach(function(ele)
+      
+      if(DomElement.classList)
       {
-        if(selectorName === ele)
-          {
-            trueOrFalse = true;
-          }
-      });
+        return DomElement.classList.contains(selectorName);
+      }
+      else
+      {
+        var classNames = DomElement.className.split(' ');
+        return classNames.indexOf(selectorName) > -1;
+      }
 
-      return trueOrFalse;
+      // var trueOrFalse =false;
+
+      // classNames.forEach(function(ele)
+      // {
+      //   if(selectorName === ele)
+      //     {
+      //       trueOrFalse = true;
+      //     }
+      // });
+
+      //return trueOrFalse;
     }
   }
 
@@ -99,7 +111,7 @@ var matchFunctionMaker = function(selector)
     return function(DomElement)
     {
       var selectorName = selector.split('.');
-      if(DomElement.tagName.toLowerCase() === selectorName[0])
+      if(DomElement.tagName.toLowerCase() === selectorName[0].toLowerCase())
       {
         var classNames = DomElement.className.split(' ');
         var trueOrFalse = false;
@@ -121,7 +133,7 @@ var matchFunctionMaker = function(selector)
     // define matchFunction for tag
     return function(DomElement)
     {
-      var selectorName = selector;
+      var selectorName = selector.toLowerCase();
       return DomElement.tagName.toLowerCase() === selectorName ? true:false;
     }
   }
