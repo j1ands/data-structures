@@ -1,0 +1,26 @@
+Node.prototype.displayLeaf = function(key, node)
+{
+	//var tempNode;
+	//debugger;
+	if(this === 0)
+	{
+		throw new Error("Node not on tree.");
+	}
+
+	//var tempNode = node || this;
+
+	if(this.key == key)
+	{
+		return this.val;
+	}
+	else if(key < this.key)
+	{
+
+		return this.left.displayLeaf(key);
+	}
+	//else if(key >= tempNode.key)
+	else
+	{
+		return this.right.displayLeaf(key);
+	}
+}
